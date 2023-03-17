@@ -44,40 +44,39 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCApjdzu1GA-Y7H9nWq30TWMXi8Rw9PRbA',
-    appId: '1:89134278168:web:007c127635ce2a04ac056d',
-    messagingSenderId: '89134278168',
-    projectId: 'quizapp-df4cf',
-    authDomain: 'quizapp-df4cf.firebaseapp.com',
-    storageBucket: 'quizapp-df4cf.appspot.com',
-    measurementId: 'G-D1ZBPTG7XV',
+    apiKey: 'AIzaSyDB2cpbOFSvxvr2qiD7g4WbTX6lSddYxZI',
+    appId: '1:43506521486:web:a1306f4d51a73cb12180df',
+    messagingSenderId: '43506521486',
+    projectId: 'quizapp1-a364f',
+    authDomain: 'quizapp1-a364f.firebaseapp.com',
+    storageBucket: 'quizapp1-a364f.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCkakdNXJxEEWRoOW70kKP_C8tOycbaaws',
-    appId: '1:89134278168:android:7c385512da13cd5fac056d',
-    messagingSenderId: '89134278168',
-    projectId: 'quizapp-df4cf',
-    storageBucket: 'quizapp-df4cf.appspot.com',
+    apiKey: 'AIzaSyDuVlsHVO_mZi7tSF7-jkHzt30EvuUI2ks',
+    appId: '1:43506521486:android:24fbe40d702ea7f52180df',
+    messagingSenderId: '43506521486',
+    projectId: 'quizapp1-a364f',
+    storageBucket: 'quizapp1-a364f.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCnxHXO3ROwprsSxf47UnDPSfX58iaXEGc',
-    appId: '1:89134278168:ios:e8b1712a9e40ca14ac056d',
-    messagingSenderId: '89134278168',
-    projectId: 'quizapp-df4cf',
-    storageBucket: 'quizapp-df4cf.appspot.com',
-    iosClientId: '89134278168-klrk2n175lunudmqr6tihgcnfbgbgse6.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA1FCRTtrY7iPewRQTZrbS5YSeK0u1cQAQ',
+    appId: '1:43506521486:ios:994c33d66f056b192180df',
+    messagingSenderId: '43506521486',
+    projectId: 'quizapp1-a364f',
+    storageBucket: 'quizapp1-a364f.appspot.com',
+    iosClientId: '43506521486-eisiuhs8p5dsvtsbvtunb2ea361730ai.apps.googleusercontent.com',
     iosBundleId: 'com.example.quizapp1',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCnxHXO3ROwprsSxf47UnDPSfX58iaXEGc',
-    appId: '1:89134278168:ios:e8b1712a9e40ca14ac056d',
-    messagingSenderId: '89134278168',
-    projectId: 'quizapp-df4cf',
-    storageBucket: 'quizapp-df4cf.appspot.com',
-    iosClientId: '89134278168-klrk2n175lunudmqr6tihgcnfbgbgse6.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA1FCRTtrY7iPewRQTZrbS5YSeK0u1cQAQ',
+    appId: '1:43506521486:ios:994c33d66f056b192180df',
+    messagingSenderId: '43506521486',
+    projectId: 'quizapp1-a364f',
+    storageBucket: 'quizapp1-a364f.appspot.com',
+    iosClientId: '43506521486-eisiuhs8p5dsvtsbvtunb2ea361730ai.apps.googleusercontent.com',
     iosBundleId: 'com.example.quizapp1',
   );
 }
