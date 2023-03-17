@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:quizapp1/view/signin.dart';
 import 'package:quizapp1/widgets/widgets.dart';
 import 'firebase_options.dart';
+import 'widgets/quiz_play_widgets.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const SignIn(),
+      home: const SignIn()
     );
   }
 }

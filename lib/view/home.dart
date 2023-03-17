@@ -1,6 +1,10 @@
+//TODO: keep track of score per quiz, show results page
+//TODO: progress bar TOTAL GPA (aggregate all the questions of all quizzes and count # of right/wrong)
+
 import 'package:flutter/material.dart';
 import 'package:quizapp1/view/quiz1.dart';
 import 'package:quizapp1/view/signin.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -9,6 +13,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  FirebaseFirestore db = FirebaseFirestore.instance; 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +44,7 @@ class _HomeState extends State<Home> {
             isThreeLine: true,
             onTap: () {
               Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Quiz1())
+              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz1"))
             );
             },
           )
@@ -53,7 +58,7 @@ class _HomeState extends State<Home> {
             isThreeLine: true,
             onTap: () {
               Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Quiz1())
+              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz2"))
             );
             },
           ),
