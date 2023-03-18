@@ -19,14 +19,14 @@ class _HomeState extends State<Home> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<double> allScores = [];
 
-  Widget buildMyCard(BuildContext context, String quizID) {
+  Widget buildMyCard(BuildContext context, String quizID, String topic) {
     return StreamBuilder(
         stream: db.collection(widget.userid).doc(quizID).snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          int numCorrect = -1; 
-          int totalQuestions = 1;
-          print(snapshot);
+          // int numCorrect = -1; 
+          // int totalQuestions = 1;
+          // print(snapshot);
           // if (snapshot.hasData) {
           //   numCorrect = snapshot.data?["numCorrect"] ?? -1;
           //   totalQuestions = snapshot.data?["totalQuestion"] ?? 1;
@@ -37,6 +37,7 @@ class _HomeState extends State<Home> {
               quizID,
               style: TextStyle(fontSize: 30),
             ),
+            subtitle: Text(topic),
             // subtitle: Text("$numCorrect / $totalQuestions"),
             trailing: Icon(Icons.more_vert),
             onTap: () {
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          Quiz1(quizID: quizID, userid: widget.userid)));
+                          Quiz1(quizID: quizID, userid: widget.userid, setHomeState: getScores)));
             },
           ));
         });
@@ -115,7 +116,8 @@ class _HomeState extends State<Home> {
                             ? const Text("LOADING PROGRESS!")
                             : Text((getAvg() * 100).toString()))),
                 ...snapshot.data!.docs.map((quiz) {
-                  return buildMyCard(context, quiz.id);
+                  Map<String, dynamic> data = quiz.data()! as Map<String, dynamic>;
+                  return buildMyCard(context, quiz.id, data["topics"] ?? "null topic");
                 }),
               ],
             ),
