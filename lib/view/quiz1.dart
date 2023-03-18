@@ -68,6 +68,7 @@ class _Quiz1State extends State<Quiz1> {
         onPressed: () {
           db.collection(widget.quizID).get().then((querySnapshot) {
             int correct = 0;
+            int totalquestions = querySnapshot.docs.length;
                 for (var docSnapshot in querySnapshot.docs) {
                 //question id : usser choicec __ CHOCIES
                 // docSnapshot.id --> question id
@@ -76,11 +77,14 @@ class _Quiz1State extends State<Quiz1> {
                 if (choices[docSnapshot.id] == docSnapshot.data()["Answer"]) correct++;
               }
               double scoreXD = correct / querySnapshot.docs.length;
+
             setState( () { 
             
             var us3r = <String, dynamic>{
               ...choices,
               "score": scoreXD,
+              "numCorrect" : correct,
+              "totalQuestion" : totalquestions, 
             };
             
               widget.showAnswers = true;
