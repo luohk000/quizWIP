@@ -14,55 +14,91 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   FirebaseFirestore db = FirebaseFirestore.instance; 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Available Quizzes')),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        height: 50,
-        margin: const EdgeInsets.all(10),
-        child: ElevatedButton(
-          child: Text("Logout"),
-          onPressed: (){
-            Navigator.push(
-              context, MaterialPageRoute(builder: (context) => SignIn())
-            );
-          },
-        )
-      ),
-      body: Container(
-      child: ListView(
-      children: <Widget>[
-         Card(
+
+  Widget buildMyCard(BuildContext context, String quizID) {
+    return Card(
           child: ListTile(
-            title: Text('Quiz 1', style: TextStyle(fontSize: 30),),
-            subtitle:
-                Text('Unit 1: Primitive types'),
+            title: Text(quizID, style: TextStyle(fontSize: 30),),
+            // subtitle:
+            //     Text(subtitle),
             trailing: Icon(Icons.more_vert),
-            isThreeLine: true,
             onTap: () {
               Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz1"))
+              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: quizID))
             );
             },
           )
-         ),
-          Card(
-          child: ListTile(
-            title: Text('Quiz 2', style: TextStyle(fontSize: 30),),
-            subtitle:
-                Text('Unit 2: Boolean'),
-            trailing: Icon(Icons.more_vert),
-            isThreeLine: true,
-            onTap: () {
-              Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz2"))
-            );
-            },
-          ),
-         ),
+         );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> allQuizIds = ["Quiz1", "Quiz2", "Quiz3"];
+    return Scaffold(
+      appBar: AppBar(automaticallyImplyLeading: false, title: const Text('Dashboard')),
+      // put this logout button somewhere else
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: Container(
+      //   height: 50,
+      //   margin: const EdgeInsets.all(10),
+      //   child: ElevatedButton(
+      //     child: Text("Logout"),
+      //     onPressed: (){
+      //       Navigator.push(
+      //         context, MaterialPageRoute(builder: (context) => SignIn())
+      //       );
+      //     },
+      //   )
+      // ),
+      body: Container(
+      child: ListView(
+      children: <Widget>[
+        ...allQuizIds.map((quiz) {
+          return buildMyCard(context, quiz);
+        //   child: ListTile(
+        //     title: Text('Quiz', style: TextStyle(fontSize: 30),),
+        //     // subtitle:
+        //     //     Text('Unit 1: Primitive types'),
+        //     trailing: Icon(Icons.more_vert),
+        //     // isThreeLine: true,
+        //     onTap: () {
+        //       Navigator.push(
+        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: quiz))
+        //     );
+        //     },
+        //   )
+        //  );
+        }),
+        //  Card(
+        //   child: ListTile(
+        //     title: Text('Quiz 1', style: TextStyle(fontSize: 30),),
+        //     subtitle:
+        //         Text('Unit 1: Primitive types'),
+        //     trailing: Icon(Icons.more_vert),
+        //     isThreeLine: true,
+        //     onTap: () {
+        //       Navigator.push(
+        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz1"))
+        //     );
+        //     },
+        //   )
+        //  ),
+        //   Card(
+        //   child: ListTile(
+        //     title: Text('Quiz 2', style: TextStyle(fontSize: 30),),
+        //     subtitle:
+        //         Text('Unit 2: Boolean'),
+        //     trailing: Icon(Icons.more_vert),
+        //     isThreeLine: true,
+        //     onTap: () {
+        //       Navigator.push(
+        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz2"))
+        //     );
+        //     },
+        //   ),
+        //  ),
       ],
        ),
       ),

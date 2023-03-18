@@ -31,7 +31,7 @@ class _Quiz1State extends State<Quiz1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Quiz :3')),
+      appBar: AppBar(title: (!widget.showAnswers) ? Text('Quiz') : Text('Results')),
       body: StreamBuilder<QuerySnapshot>(
         stream: db.collection(widget.quizID).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -41,17 +41,15 @@ class _Quiz1State extends State<Quiz1> {
               List<String> choiceKeys = ["A", "B", "C", "D", "E"];
               return Column(
                 children:[ 
-                  Text(choices[data['Prompt']]?? "no answer"),
-                  ListTile(
-                  title: Text(data['Prompt'], style: TextStyle(fontSize: 20),),
-                  ),
+                  Text(choices[data['Prompt']]?? "this shouldn't show"),
+                  Container(width: MediaQuery.of(context).size.width / 2, child: Text(data['Prompt'], style: TextStyle(fontSize: 20),)),
                   ...choiceKeys.map((choiceKey) {
                     return Card(
                     color: getColor(data['Prompt'], choiceKey, data['Answer']),
                     child: ListTile(
                       title: Text(choiceKey, style: TextStyle(fontSize: 30),),
-                      subtitle:
-                          Text(data[choiceKey]),
+                      subtitle: !widget.showAnswers || choiceKey != data['Answer'] ? 
+                          Text(data[choiceKey]) : Text('${data[choiceKey]}\n ${data['Explain']}'),
                       onTap: !widget.showAnswers ? () {
                         setState(() { choices[data['Prompt']] = choiceKey; });
                       } : null,
