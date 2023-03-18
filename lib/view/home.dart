@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:quizapp1/view/quiz1.dart';
 import 'package:quizapp1/view/signin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+
 class Home extends StatefulWidget {
    Home({super.key, required this.userid});
   String userid;
@@ -15,18 +17,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   FirebaseFirestore db = FirebaseFirestore.instance; 
+  List<double> allScores =[];
 
-  void inputData() {
-    // final User user = db.currentUser;
-    // final uid = user.uid;
-  }
+  
 
   Widget buildMyCard(BuildContext context, String quizID) {
     return Card(
           child: ListTile(
             title: Text(quizID, style: TextStyle(fontSize: 30),),
             // subtitle:
-            //     Text(subtitle),
+            //     Text(score.toString()),
             trailing: Icon(Icons.more_vert),
             onTap: () {
               Navigator.push(
@@ -35,6 +35,37 @@ class _HomeState extends State<Home> {
             },
           )
          );
+  }
+
+  void getScores() {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection(widget.userid).get().then( (querySnapshot ) {
+      print("hi im in then");
+      print(allScores);
+      print(querySnapshot.docs.length);
+      List<double> temp = [];
+      for (var docSnapshot in querySnapshot.docs) {
+        if (docSnapshot.data()["score"] == null) continue;
+        temp.add(docSnapshot.data()["score"]); 
+      }
+      setState( () {
+        allScores = temp;
+        print(allScores);
+      } );
+    });
+    print(allScores);
+  }
+
+  double getAvg() {
+    double sum = 0;
+    for (double score in allScores) sum += score;
+    return sum / allScores.length;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getScores();
   }
 
 
@@ -61,50 +92,13 @@ class _HomeState extends State<Home> {
       body: Container(
       child: ListView(
       children: <Widget>[
+        Padding(padding: EdgeInsets.all(35), 
+        child: CircularPercentIndicator(
+          radius: 150, percent: allScores.isEmpty ? 0.0 : getAvg(),
+           center: allScores.isEmpty ? const Text("LOADING PROGRESS!") : Text((getAvg()*100).toString()))),
         ...allQuizIds.map((quiz) {
           return buildMyCard(context, quiz);
-        //   child: ListTile(
-        //     title: Text('Quiz', style: TextStyle(fontSize: 30),),
-        //     // subtitle:
-        //     //     Text('Unit 1: Primitive types'),
-        //     trailing: Icon(Icons.more_vert),
-        //     // isThreeLine: true,
-        //     onTap: () {
-        //       Navigator.push(
-        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: quiz))
-        //     );
-        //     },
-        //   )
-        //  );
         }),
-        //  Card(
-        //   child: ListTile(
-        //     title: Text('Quiz 1', style: TextStyle(fontSize: 30),),
-        //     subtitle:
-        //         Text('Unit 1: Primitive types'),
-        //     trailing: Icon(Icons.more_vert),
-        //     isThreeLine: true,
-        //     onTap: () {
-        //       Navigator.push(
-        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz1"))
-        //     );
-        //     },
-        //   )
-        //  ),
-        //   Card(
-        //   child: ListTile(
-        //     title: Text('Quiz 2', style: TextStyle(fontSize: 30),),
-        //     subtitle:
-        //         Text('Unit 2: Boolean'),
-        //     trailing: Icon(Icons.more_vert),
-        //     isThreeLine: true,
-        //     onTap: () {
-        //       Navigator.push(
-        //       context, MaterialPageRoute(builder: (context) => Quiz1(quizID: "Quiz2"))
-        //     );
-        //     },
-        //   ),
-        //  ),
       ],
        ),
       ),
