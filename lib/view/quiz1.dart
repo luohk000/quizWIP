@@ -5,9 +5,10 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:quizapp1/view/results.dart';
 
 class Quiz1 extends StatefulWidget {
-  Quiz1({super.key, required this.quizID});
+  Quiz1({super.key, required this.quizID, required this.userid});
   String quizID; 
   bool showAnswers = false;
+  String userid;
 
   @override
   State<Quiz1> createState() => _Quiz1State();
@@ -15,16 +16,16 @@ class Quiz1 extends StatefulWidget {
 
 class _Quiz1State extends State<Quiz1> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  late Map<String, String> choices = {};
+  late Map<String, String> choices = {}; // key : actual question/prompt, value: user submitted answer
 
-  Color? getColor(String prompt, String choiceKey, String answerChoice) { 
+  Color? getColor(String questionid, String choiceKey, String answerChoice) { 
     if (!widget.showAnswers) {
-      if (choices[prompt] == choiceKey) return Colors.blue[400];
+      if (choices[questionid] == choiceKey) return Colors.blue[400];
       else return null;
     }
     else {
       if (choiceKey == answerChoice) return Colors.green[400];
-      else if (choiceKey == choices[prompt] && choices[prompt] != answerChoice) return Colors.red;
+      else if (choiceKey == choices[questionid] && choices[questionid] != answerChoice) return Colors.red;
     }
   }
 
@@ -37,21 +38,22 @@ class _Quiz1State extends State<Quiz1> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot question) {
+              print(question.id);
               Map<String, dynamic> data = question.data()! as Map<String, dynamic>;
               List<String> choiceKeys = ["A", "B", "C", "D", "E"];
               return Column(
                 children:[ 
-                  Text(choices[data['Prompt']]?? "this shouldn't show"),
+                  // Text(choices[data['Prompt']]?? "this shouldn't show"),
                   Container(width: MediaQuery.of(context).size.width / 2, child: Text(data['Prompt'], style: TextStyle(fontSize: 20),)),
                   ...choiceKeys.map((choiceKey) {
                     return Card(
-                    color: getColor(data['Prompt'], choiceKey, data['Answer']),
+                    color: getColor(question.id, choiceKey, data['Answer']),
                     child: ListTile(
                       title: Text(choiceKey, style: TextStyle(fontSize: 30),),
                       subtitle: !widget.showAnswers || choiceKey != data['Answer'] ? 
                           Text(data[choiceKey]) : Text('${data[choiceKey]}\n ${data['Explain']}'),
                       onTap: !widget.showAnswers ? () {
-                        setState(() { choices[data['Prompt']] = choiceKey; });
+                        setState(() { choices[question.id] = choiceKey; });
                       } : null,
                     )
                   );
@@ -64,15 +66,27 @@ class _Quiz1State extends State<Quiz1> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // for(int i = 0; i < qnalist.length; i++){
-          //   print(i);
-          //   print(qnalist[i].prompt);
-          //   print(qnalist[i].answer);
-          //   print(qnalist[i].choice);
-          //   print(qnalist[i].answerDesc);
-          //   print(qnalist[i].choiceDesc);
-          // }
-          setState( () { widget.showAnswers = true;});
+          db.collection(widget.quizID).get().then((querySnapshot) {
+            int correct = 0;
+                for (var docSnapshot in querySnapshot.docs) {
+                //question id : usser choicec __ CHOCIES
+                // docSnapshot.id --> question id
+                // docsnapshot.daataanswer --> correct answer
+                // assuming USER QNSWERS ALL QUESTIONS 
+                if (choices[docSnapshot.id] == docSnapshot.data()["Answer"]) correct++;
+              }
+              double scoreXD = correct / querySnapshot.docs.length;
+            setState( () { 
+            
+            var us3r = <String, dynamic>{
+              ...choices,
+              "score": scoreXD,
+            };
+            
+              widget.showAnswers = true;
+              db.collection(widget.userid).doc(widget.quizID).set(us3r);
+            });
+            });
 
           
 

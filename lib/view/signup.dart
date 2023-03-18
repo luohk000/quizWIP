@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quizapp1/view/signin.dart';
 import '../widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'home.dart';
 
 class SignUp extends StatefulWidget {
@@ -71,8 +72,7 @@ Widget build(BuildContext context){
           SignInSignOutButton(context, false, () {
             FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailTextController.text, 
             password: _passwordTextController.text).then((value){
-            print('created new account');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userid: value.user?.uid ?? '')));
             });
           }),
           Row(

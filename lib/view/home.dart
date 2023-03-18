@@ -6,7 +6,8 @@ import 'package:quizapp1/view/quiz1.dart';
 import 'package:quizapp1/view/signin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class Home extends StatefulWidget {
-  const Home({super.key});
+   Home({super.key, required this.userid});
+  String userid;
 
   @override
   State<Home> createState() => _HomeState();
@@ -14,6 +15,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   FirebaseFirestore db = FirebaseFirestore.instance; 
+
+  void inputData() {
+    // final User user = db.currentUser;
+    // final uid = user.uid;
+  }
 
   Widget buildMyCard(BuildContext context, String quizID) {
     return Card(
@@ -24,7 +30,7 @@ class _HomeState extends State<Home> {
             trailing: Icon(Icons.more_vert),
             onTap: () {
               Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: quizID))
+              context, MaterialPageRoute(builder: (context) => Quiz1(quizID: quizID, userid: widget.userid))
             );
             },
           )

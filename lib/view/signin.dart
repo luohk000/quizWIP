@@ -64,8 +64,8 @@ class _SignInState extends State<SignIn> {
           SignInSignOutButton(context, true, (){
             FirebaseAuth.instance.signInWithEmailAndPassword
             (email: _emailTextController.text, password: _passwordTextController.text).then
-            ((value){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+            ((value){ 
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Home(userid: value.user?.uid ?? '')));
             });
           }),
           Row(
