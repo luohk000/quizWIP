@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:quizapp1/view/results.dart';
 
 class Quiz1 extends StatefulWidget {
   Quiz1(
@@ -21,8 +20,7 @@ class Quiz1 extends StatefulWidget {
 
 class _Quiz1State extends State<Quiz1> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  late Map<String, String> choices =
-      {}; // key : actual question/prompt, value: user submitted answer
+  late Map<String, String> choices = {};
 
   Color? getColor(String questionid, String choiceKey, String answerChoice) {
     if (!widget.showAnswers) {
@@ -51,12 +49,10 @@ class _Quiz1State extends State<Quiz1> {
           }
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot question) {
-              print(question.id);
               Map<String, dynamic> data =
                   question.data()! as Map<String, dynamic>;
               List<String> choiceKeys = ["A", "B", "C", "D", "E"];
               return Column(children: [
-                // Text(choices[data['Prompt']]?? "this shouldn't show"),
                 Container(
                     width: MediaQuery.of(context).size.width / 2,
                     child: Text(
@@ -95,10 +91,6 @@ class _Quiz1State extends State<Quiz1> {
             int correct = 0;
             int totalquestions = querySnapshot.docs.length;
             for (var docSnapshot in querySnapshot.docs) {
-              //question id : usser choicec __ CHOCIES
-              // docSnapshot.id --> question id
-              // docsnapshot.daataanswer --> correct answer
-              // assuming USER QNSWERS ALL QUESTIONS
               if (choices[docSnapshot.id] == docSnapshot.data()["Answer"])
                 correct++;
             }
@@ -124,7 +116,7 @@ class _Quiz1State extends State<Quiz1> {
           });
         },
         tooltip: 'Submit',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.check_rounded),
       ),
     );
   }

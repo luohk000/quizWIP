@@ -1,6 +1,3 @@
-//TODO: keep track of score per quiz, show results page
-//TODO: progress bar TOTAL GPA (aggregate all the questions of all quizzes and count # of right/wrong)
-
 import 'package:flutter/material.dart';
 import 'package:quizapp1/view/quiz1.dart';
 import 'package:quizapp1/view/signin.dart';
@@ -24,28 +21,28 @@ class _HomeState extends State<Home> {
         stream: db.collection(widget.userid).doc(quizID).snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          // int numCorrect = -1; 
-          // int totalQuestions = 1;
-          // print(snapshot);
-          // if (snapshot.hasData) {
-          //   numCorrect = snapshot.data?["numCorrect"] ?? -1;
-          //   totalQuestions = snapshot.data?["totalQuestion"] ?? 1;
-          // }
+          int numCorrect = -1;
+          int totalQuestions = 1;
+          if (snapshot.hasData) {
+            numCorrect = snapshot.data?["numCorrect"] ?? -1;
+            totalQuestions = snapshot.data?["totalQuestion"] ?? 1;
+          }
           return Card(
               child: ListTile(
             title: Text(
               quizID,
               style: TextStyle(fontSize: 30),
             ),
-            subtitle: Text(topic),
-            // subtitle: Text("$numCorrect / $totalQuestions"),
+            subtitle: Text("$topic \n $numCorrect / $totalQuestions"),
             trailing: Icon(Icons.more_vert),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          Quiz1(quizID: quizID, userid: widget.userid, setHomeState: getScores)));
+                      builder: (context) => Quiz1(
+                          quizID: quizID,
+                          userid: widget.userid,
+                          setHomeState: getScores)));
             },
           ));
         });
@@ -61,7 +58,6 @@ class _HomeState extends State<Home> {
       }
       setState(() {
         allScores = temp;
-        print(allScores);
       });
     });
   }
@@ -83,25 +79,11 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
           automaticallyImplyLeading: false, title: const Text('Dashboard')),
-      // put this logout button somewhere else
-      // floatingActionButtonLocation:
-      //     FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: Container(
-      //   height: 50,
-      //   margin: const EdgeInsets.all(10),
-      //   child: ElevatedButton(
-      //     child: Text("Logout"),
-      //     onPressed: (){
-      //       Navigator.push(
-      //         context, MaterialPageRoute(builder: (context) => SignIn())
-      //       );
-      //     },
-      //   )
-      // ),
       body: StreamBuilder<QuerySnapshot>(
         stream: db.collection("QuizNames").snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError || snapshot.connectionState != ConnectionState.active) {
+          if (snapshot.hasError ||
+              snapshot.connectionState != ConnectionState.active) {
             return Text("Loading...");
           }
           return Container(
@@ -110,15 +92,32 @@ class _HomeState extends State<Home> {
                 Padding(
                     padding: EdgeInsets.all(35),
                     child: CircularPercentIndicator(
+                        progressColor: Colors.blue[900],
+                        lineWidth: 15,
                         radius: 150,
                         percent: allScores.isEmpty ? 0.0 : getAvg(),
                         center: allScores.isEmpty
                             ? const Text("LOADING PROGRESS!")
-                            : Text((getAvg() * 100).toString()))),
+                            : Text(
+                                "${(getAvg() * 100.0).roundToDouble().toString()}%",
+                                style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.bold)))),
                 ...snapshot.data!.docs.map((quiz) {
-                  Map<String, dynamic> data = quiz.data()! as Map<String, dynamic>;
-                  return buildMyCard(context, quiz.id, data["topics"] ?? "null topic");
+                  Map<String, dynamic> data =
+                      quiz.data()! as Map<String, dynamic>;
+                  return buildMyCard(
+                      context, quiz.id, data["topics"] ?? "null topic");
                 }),
+                Container(
+                    child: ElevatedButton(
+                  child: Text("Logout",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignIn()));
+                  },
+                )),
               ],
             ),
           );
